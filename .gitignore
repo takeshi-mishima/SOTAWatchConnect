@@ -1,0 +1,11 @@
+build/
+dist/
+backup/
+SOTAWatchConnect/bridge/logs/
+*.zip
+*.spec
+*.log
+*.log.*
+__pycache__/
+*.old
+.claude_write_test

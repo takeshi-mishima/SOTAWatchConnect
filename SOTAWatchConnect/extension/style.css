@@ -1,0 +1,29 @@
+/* Rig control button: base style (applies to SOTAwatch badges and POTA icon actions) */
+.rig-ctl-button {
+    cursor: pointer !important;
+    transition: opacity 0.1s, background-color 0.1s !important;
+    user-select: none !important;
+}
+
+/* Rig control button: hover state */
+.rig-ctl-button:hover {
+    opacity: 0.7 !important;
+}
+
+/* POTA's clickable area is just an icon, so give it a subtle
+   highlight to make the affordance visible */
+.v-list-item__action.rig-ctl-button {
+    border-radius: 50% !important;
+    background-color: rgba(76, 175, 80, 0.15) !important;
+}
+
+.v-list-item__action.rig-ctl-button:hover {
+    background-color: rgba(76, 175, 80, 0.3) !important;
+    opacity: 1 !important;
+}
+
+/* Rig control button: click flash animation */
+.rig-ctl-button.rig-flash {
+    transform: scale(0.95) !important;
+    filter: brightness(1.5) !important;
+}

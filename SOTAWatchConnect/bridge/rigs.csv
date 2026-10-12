@@ -1,0 +1,3 @@
+name,model,com_port,baud,rigctld_port
+FT-817ND,1020,COM3,9600,4533
+FTX-1,1051,COM7,38400,4534

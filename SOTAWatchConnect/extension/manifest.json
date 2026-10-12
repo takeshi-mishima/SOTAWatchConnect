@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "SOTAWatch Connect (with POTA Suport)",
+  "version": "2.1",
+  "description": "Makes mode badges on the SOTAwatch3 spots list and POTA spots list clickable. One click tunes your rig to the spotted freq and mode.",
+  "author": "© 2026 Takeshi Mishima JK1VUZ",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "http://localhost/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SOTAWatch Connect - アクティブなリグの選択",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://sotawatch.sota.org.uk/*",
+        "https://pota.app/*"
+      ],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

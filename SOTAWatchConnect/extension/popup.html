@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SOTAWatch Connect</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    width: 260px;
+    padding: 12px;
+    margin: 0;
+  }
+  h1 {
+    font-size: 14px;
+    margin: 0 0 10px;
+  }
+  label {
+    display: block;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  select {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+  #status {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #666;
+    min-height: 32px;
+    line-height: 1.4;
+  }
+  #status.error {
+    color: #c0392b;
+  }
+  #reload {
+    margin-top: 8px;
+    font-size: 12px;
+    background: none;
+    border: none;
+    color: #2266cc;
+    cursor: pointer;
+    padding: 0;
+  }
+</style>
+</head>
+<body>
+  <h1>SOTAWatch Connect</h1>
+  <label for="rig-select">アクティブなリグ</label>
+  <select id="rig-select">
+    <option value="">読み込み中...</option>
+  </select>
+  <div id="status"></div>
+  <button id="reload">リグ一覧を再読み込み</button>
+  <script src="popup.js"></script>
+</body>
+</html>
