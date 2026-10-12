@@ -97,7 +97,8 @@ If fso.FileExists(csvPath) Then
 
     csvFile.Close
 Else
-    WScript.Echo "rigs.csv not found: " & csvPath
+    WScript.Echo "rigs.csv not found: " & csvPath & vbCrLf & vbCrLf & _
+                 "Copy rigs.sample.csv to rigs.csv in this folder, then edit the COM port and other values for your rig(s)."
 End If
 
 ' --- Bridge auto-start configuration ---

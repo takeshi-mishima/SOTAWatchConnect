@@ -61,6 +61,7 @@ def load_rigs():
                     print(f"rigs.csv: invalid rigctld_port for '{name}': {port_str!r} (skipped)")
     except FileNotFoundError:
         print(f"rigs.csv not found: {RIGS_CSV}")
+        print("Copy rigs.sample.csv to rigs.csv in the same folder, then edit the COM port and other values for your rig(s).")
     return rigs
 
 RIGS = load_rigs()

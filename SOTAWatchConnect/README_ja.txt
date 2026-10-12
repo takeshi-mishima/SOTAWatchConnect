@@ -65,9 +65,9 @@ python -m pip install flask flask-cors
 を試してください。
 
 3. リグの設定 — bridge/rigs.csv
-bridge/rigs.csv をテキストエディタ（Excelでも可）で開いてください。
+bridge/rigs.sample.csv を bridge/rigs.csv という名前でコピーし、bridge/rigs.csv をテキストエディタ（Excelでも可）で開いてください。
 
-以下は記述例です。お使いのリグとCOMポート番号（Windowsのデバイスマネージャーで確認できます）に合わせて書き換えてください。
+サンプルの内容は記述例です。お使いのリグとCOMポート番号（Windowsのデバイスマネージャーで確認できます）に合わせて書き換えてください。
 
 name,model,com_port,baud,rigctld_port
 FT-817ND,1020,COM3,9600,4533
@@ -81,10 +81,9 @@ baud          … CAT通信のボーレート。
 rigctld_port  … このリグのrigctldインスタンス専用のTCPポート番号。
                  リグごとに必ず異なる番号にしてください。
 
-・1台だけ使う場合は、データ行を1行だけ残してください。
+・1台だけ使う場合は、データ行を1行だけ記述してください。
 ・リグを増やす場合は行を追加してください（それぞれ別のrigctld_portを指定）。
-・通常、start_rig_bridge.vbs自体を編集する必要はありません。このCSVを自動的に読み込み、
-  行数分のrigctldを起動します。
+・rigs.csv は配布パッケージに含まれないため、バージョンアップで上書きされません。
 
 [自動起動の設定 (Windows)]
 

@@ -72,9 +72,9 @@ python -m pip install flask flask-cors
 
 ### 3. Configure Your Rig(s) — `bridge/rigs.csv`
 
-Open `bridge/rigs.csv` in a text editor (Excel works too).
+Copy `bridge/rigs.sample.csv` to `bridge/rigs.csv`, then open `bridge/rigs.csv` in a text editor (Excel works too).
 
-The following is an example. Replace the entries with your own rig(s) and COM port(s) (you can check the COM port number in Windows Device Manager).
+The sample contains example values only. Replace the entries with your own rig(s) and COM port(s) (you can check the COM port number in Windows Device Manager).
 
 ```csv
 name,model,com_port,baud,rigctld_port
@@ -90,9 +90,9 @@ FTX-1,1051,COM7,38400,4534
 | `baud`         | Baud rate for CAT communication.                                                     |
 | `rigctld_port` | A unique TCP port for this rig's `rigctld` instance. Keep each rig's port different. |
 
-- To use **one rig**, just keep a single data row.
+- To use **one rig**, just write a single data row.
 - To add more rigs, add more rows — each with its own `rigctld_port`.
-- You normally do **not** need to edit `start_rig_bridge.vbs` itself; it reads this CSV automatically and starts one `rigctld` per row.
+- Your `rigs.csv` is not included in the release package, so updating the tool will not overwrite it.
 
 ## Auto-Start Setup (Windows)
 

@@ -43,7 +43,7 @@ async function loadRigs() {
 
     if (rigs.length === 0) {
         selectEl.innerHTML = '<option value="">(rigs.csvにリグが未設定です)</option>';
-        setStatus('bridge/rigs.csv にリグが設定されていません。', true);
+        setStatus('bridge/rigs.csv にリグが設定されていません。bridge/rigs.sample.csv をコピーして rigs.csv を作り、編集してください。', true);
         return;
     }
 

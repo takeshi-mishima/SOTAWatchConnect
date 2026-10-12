@@ -9,3 +9,6 @@ SOTAWatchConnect/bridge/logs/
 __pycache__/
 *.old
 .claude_write_test
+
+# User-specific rig settings (copy of bridge/rigs.sample.csv)
+SOTAWatchConnect/bridge/rigs.csv
