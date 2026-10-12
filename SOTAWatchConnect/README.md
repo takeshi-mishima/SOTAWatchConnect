@@ -74,6 +74,8 @@ python -m pip install flask flask-cors
 
 Open `bridge/rigs.csv` in a text editor (Excel works too).
 
+The following is an example. Replace the entries with your own rig(s) and COM port(s) (you can check the COM port number in Windows Device Manager).
+
 ```csv
 name,model,com_port,baud,rigctld_port
 FT-817ND,1020,COM3,9600,4533

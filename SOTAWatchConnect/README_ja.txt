@@ -67,6 +67,8 @@ python -m pip install flask flask-cors
 3. リグの設定 — bridge/rigs.csv
 bridge/rigs.csv をテキストエディタ（Excelでも可）で開いてください。
 
+以下は記述例です。お使いのリグとCOMポート番号（Windowsのデバイスマネージャーで確認できます）に合わせて書き換えてください。
+
 name,model,com_port,baud,rigctld_port
 FT-817ND,1020,COM3,9600,4533
 FTX-1,1051,COM7,38400,4534
