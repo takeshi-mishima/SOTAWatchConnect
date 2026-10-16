@@ -1,4 +1,4 @@
-/* Rig control button: base style (applies to SOTAwatch badges and POTA icon actions) */
+/* Rig control button: base style (applies to SOTAwatch badges, POTA icons and POTA table cells) */
 .rig-ctl-button {
     cursor: pointer !important;
     transition: opacity 0.1s, background-color 0.1s !important;
@@ -10,14 +10,27 @@
     opacity: 0.7 !important;
 }
 
-/* POTA's clickable area is just an icon, so give it a subtle
-   highlight to make the affordance visible */
-.v-list-item__action.rig-ctl-button {
+/* POTA's clickable area in the card view and the map popup is just
+   an icon, so give it a subtle round highlight to make the affordance
+   visible */
+.v-icon.rig-ctl-button {
+    box-sizing: content-box !important;
+    padding: 3px !important;
     border-radius: 50% !important;
     background-color: rgba(76, 175, 80, 0.15) !important;
 }
 
-.v-list-item__action.rig-ctl-button:hover {
+.v-icon.rig-ctl-button:hover {
+    background-color: rgba(76, 175, 80, 0.3) !important;
+    opacity: 1 !important;
+}
+
+/* POTA table / list view: freq and mode cells */
+td.rig-ctl-button {
+    background-color: rgba(76, 175, 80, 0.15) !important;
+}
+
+td.rig-ctl-button:hover {
     background-color: rgba(76, 175, 80, 0.3) !important;
     opacity: 1 !important;
 }

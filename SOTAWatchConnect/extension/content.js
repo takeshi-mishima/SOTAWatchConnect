@@ -100,68 +100,149 @@ function injectSotaButtons() {
 }
 
 /* --------------------------------------------------------------------
- * POTA (pota.app)
- * Each spot card is a Vuetify v-list-item:
- *   <div class="v-list-item">
- *     <div class="v-list-item__action"><icon/></div>
- *     <div class="v-list-item__content">21058.0 kHz (CW)</div>
- *   </div>
- * The freq/mode icon (v-list-item__action) becomes clickable.
+ * POTA (pota.app) - Vuetify 3 version of the site
+ * Spots are shown in several layouts, and the freq/mode is made
+ * clickable in each of them:
+ *
+ *  - Card view:   <div class="v-list-item">
+ *                   <div class="v-list-item__prepend"><i class="v-icon"/></div>
+ *                   <div class="v-list-item__content">7035 kHz (CW)</div>
+ *                 </div>
+ *                 The antenna icon becomes the button.
+ *  - Table / List view: <tr> ... <td>7074</td><td>FT8</td> ...
+ *                 Both the freq cell and the mode cell become buttons.
+ *                 (The header labels are localized and the column order
+ *                 differs between Table and List, so the cells are found
+ *                 by content: a kHz number followed by a mode cell.)
+ *  - Map popup:   <div class="spot-popup__line">
+ *                   <i class="v-icon"/>14052.5 kHz (CW) · 20M</div>
+ *                 The antenna icon becomes the button.
+ *
+ * The freq/mode is read from the page when the button is clicked (not
+ * when it is attached), because POTA re-renders the list periodically
+ * and may reuse the same element for a different spot.
+ *
  * Mode is omitted from the text for plain voice spots, so it
- * defaults to SSB when no "(MODE)" suffix is present.
+ * defaults to SSB when no "(MODE)" suffix is present. "SSB" is sent
+ * as-is (same as the SOTAwatch side) and the bridge decides LSB/USB by
+ * frequency. Any alphanumeric mode (CW, FM, FT4, FT8, ...) is passed
+ * through as-is, so new modes need no code change here.
  * ------------------------------------------------------------------ */
-function injectPotaButtons() {
-    const contents = document.querySelectorAll('.v-list-item__content:not(.rig-ctl-processed)');
 
-    contents.forEach(content => {
-        const text = content.innerText.trim();
+// POTA displays kHz, but the bridge expects MHz (same as the SOTAwatch side).
+function potaToRigArgs(freqKHz, mode) {
+    return {
+        freq: (parseFloat(freqKHz) / 1000).toFixed(4),
+        mode: mode ? mode.toUpperCase() : 'SSB'
+    };
+}
 
-        // e.g. "21058.0 kHz (CW)"  or  "18148 kHz"
-        const match = text.match(/^([\d.]+)\s*kHz(?:\s*\(([A-Za-z0-9]+)\))?$/);
-        if (!match) return;
+// e.g. "21058.0 kHz (CW)", "18148 kHz", "14052.5 kHz (CW) · 20M"
+function potaParseText(text) {
+    const m = text.trim().match(/^([\d.]+)\s*kHz(?:\s*\(([A-Za-z0-9]+)\))?/);
+    return m ? potaToRigArgs(m[1], m[2]) : null;
+}
 
-        // Mark processed even if we bail out below, so we don't
-        // re-check this node on every DOM mutation.
-        content.classList.add('rig-ctl-processed');
+// Make the elements clickable. resolve() returns {freq, mode} (or null)
+// from the current page content.
+function bindRigButton(targets, resolve) {
+    targets.forEach(el => {
+        const setTitle = () => {
+            const r = resolve();
+            el.title = r ? `Set ${r.freq}MHz / ${r.mode} to the rig` : '';
+        };
+        setTitle();
+        el.onmouseenter = setTitle;
 
-        const listItem = content.closest('.v-list-item');
-        if (!listItem) return;
+        el.classList.add('rig-ctl-button');
+        el.classList.add('rig-ctl-processed');
 
-        const action = listItem.querySelector('.v-list-item__action');
-        if (!action) return;
-
-        const freqKHz = match[1];
-
-        // Bridge expects MHz (same convention as the SOTAwatch side),
-        // POTA displays kHz, so convert.
-        const freqMHz = parseFloat(freqKHz) / 1000;
-        const freqText = freqMHz.toFixed(4);
-
-        // Mode is omitted from the text for plain voice spots.
-        // Send "SSB" as-is (same as the SOTAwatch side) and let the
-        // bridge decide LSB/USB by frequency - don't duplicate that
-        // logic here. Explicit modes seen in the wild: FM, CW, FT4,
-        // FT8 (any alphanumeric mode text in parentheses is passed
-        // through as-is, so new modes need no code change here).
-        const modeText = match[2] ? match[2].toUpperCase() : 'SSB';
-
-        action.classList.add('rig-ctl-button');
-        action.classList.add('rig-ctl-processed');
-        action.title = `Set ${freqText}MHz / ${modeText} to the rig`;
-
-        action.onclick = (e) => {
+        el.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
 
+            const r = resolve();
+            if (!r) return;
+
             // visual feedback (flash)
-            action.classList.add('rig-flash');
+            el.classList.add('rig-flash');
             setTimeout(() => {
-                action.classList.remove('rig-flash');
+                el.classList.remove('rig-flash');
             }, 150);
 
-            sendToRig(freqText, modeText);
+            sendToRig(r.freq, r.mode);
         };
     });
+}
+
+// Card view
+function injectPotaCards() {
+    document.querySelectorAll('.v-list-item').forEach(item => {
+        const prepend = item.querySelector(':scope > .v-list-item__prepend');
+        const button = prepend && (prepend.querySelector('.v-icon') || prepend);
+        if (!button || button.classList.contains('rig-ctl-processed')) return;
+
+        const resolve = () => {
+            const content = item.querySelector(':scope > .v-list-item__content');
+            return content ? potaParseText(content.textContent) : null;
+        };
+        if (!resolve()) return;
+
+        bindRigButton([button], resolve);
+    });
+}
+
+// Table / List view
+function potaFindFreqModeCells(row) {
+    const cells = Array.from(row.children);
+
+    // Only rows of spot tables (they contain a park reference, e.g. "US-1833")
+    if (!cells.some(td => /^[A-Z0-9]{1,3}-\d{4,6}$/.test(td.textContent.trim()))) return null;
+
+    for (let i = 0; i < cells.length - 1; i++) {
+        if (/^\d{3,6}(\.\d+)?$/.test(cells[i].textContent.trim()) &&
+            /^[A-Za-z0-9]{2,6}$/.test(cells[i + 1].textContent.trim())) {
+            return { freqCell: cells[i], modeCell: cells[i + 1] };
+        }
+    }
+    return null;
+}
+
+function injectPotaTables() {
+    document.querySelectorAll('table tbody tr').forEach(row => {
+        const found = potaFindFreqModeCells(row);
+        if (!found) return;
+
+        const { freqCell, modeCell } = found;
+        if (freqCell.classList.contains('rig-ctl-processed') &&
+            modeCell.classList.contains('rig-ctl-processed')) return;
+
+        const resolve = () => {
+            const cur = potaFindFreqModeCells(row);
+            return cur ? potaToRigArgs(cur.freqCell.textContent.trim(),
+                                       cur.modeCell.textContent.trim()) : null;
+        };
+        bindRigButton([freqCell, modeCell], resolve);
+    });
+}
+
+// Map popup
+function injectPotaPopups() {
+    document.querySelectorAll('.spot-popup__line').forEach(line => {
+        const button = line.querySelector('.v-icon');
+        if (!button || button.classList.contains('rig-ctl-processed')) return;
+
+        const resolve = () => potaParseText(line.textContent);
+        if (!resolve()) return;
+
+        bindRigButton([button], resolve);
+    });
+}
+
+function injectPotaButtons() {
+    injectPotaCards();
+    injectPotaTables();
+    injectPotaPopups();
 }
 
 function injectAllButtons() {

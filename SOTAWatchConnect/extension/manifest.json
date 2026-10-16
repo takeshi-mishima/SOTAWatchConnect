@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SOTAWatch Connect (with POTA Suport)",
-  "version": "2.1",
+  "version": "2.2",
   "description": "Makes mode badges on the SOTAwatch3 spots list and POTA spots list clickable. One click tunes your rig to the spotted freq and mode.",
   "author": "© 2026 Takeshi Mishima JK1VUZ",
   "permissions": [
