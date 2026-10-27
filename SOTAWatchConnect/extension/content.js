@@ -74,8 +74,9 @@ function injectSotaButtons() {
             if (!row) return;
 
             const rowText = row.innerText;
-            const freqMatch = rowText.match(/(\d+\.\d+)/);
-            const freqText = freqMatch ? freqMatch[1] : null;
+            // Some languages (de, ca, nl, ...) use a decimal comma, e.g. "10,1109"
+            const freqMatch = rowText.match(/(\d+[.,]\d+)/);
+            const freqText = freqMatch ? freqMatch[1].replace(',', '.') : null;
 
             if (freqText) {
                 badge.classList.add('rig-ctl-button');
