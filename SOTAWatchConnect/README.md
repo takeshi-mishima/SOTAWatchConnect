@@ -5,7 +5,9 @@
 ## Features
 
 - **Interactive Mode Buttons**: Turns SOTAwatch3 and POTA mode/frequency badges into clickable buttons for instant rig control.
+
   ![SOTAwatch3](sotawatch3_sample.png)
+
 - **Multiple Rigs**: Configure any number of rigs in a single CSV file, then pick the "active rig" from the extension's popup. One click sends the spot to whichever rig is currently selected.
 - **Smart Band/Mode Logic**:
   - Automatically converts **SSB** spots to **LSB** for frequencies below 10MHz and **USB** for 10MHz and above.
